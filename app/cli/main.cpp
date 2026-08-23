@@ -1,6 +1,9 @@
-#include <Board.h>
+#include <iostream>
 
-namespace minesweeper {
+#include <Board.hpp>
 
-
-} // namespace minesweeper
+int main()
+{
+    std::cout << "Starting minesweeper...";
+    return 0;
+}

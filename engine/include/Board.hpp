@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Cell.h"
-#include "Position.h"
+#include "Cell.hpp"
+#include "Position.hpp"
 
 #include <cstddef>
 #include <vector>
