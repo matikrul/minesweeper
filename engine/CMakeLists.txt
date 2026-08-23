@@ -1,0 +1,8 @@
+add_library(minesweeper_engine
+    src/Board.cpp
+)
+
+target_include_directories(minesweeper_engine
+    PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
