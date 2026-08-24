@@ -17,6 +17,7 @@ public:
 
     [[nodiscard]] bool is_valid_position(Position position) const noexcept;
     [[nodiscard]] const Cell& cell_at(Position position) const;
+    [[nodiscard]] Cell& cell_at(Position position);
     [[nodiscard]] std::vector<Position> get_neighbors(Position position) const;
 
     void place_mines(Position safe_position);
@@ -28,6 +29,7 @@ private:
     int _width{};
     int _height{};
     int _mine_count{};
+    bool _mines_placed{false};
     std::vector<Cell> _cells{};
 };
 
