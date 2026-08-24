@@ -109,8 +109,8 @@ void Board::place_mines(Position safe_position)
     {
         const auto index = distribution(generator);
         const Position position{
-            index / _width,
-            index % _width
+            static_cast<int>(index / _width),
+            static_cast<int>(index % _width)
         };
 
         if (position == safe_position)
@@ -202,7 +202,7 @@ void Board::print_board() const
             }
             else if (cell.adjacent_mines() == 0)
             {
-                std::cout << "  ";
+                std::cout << "_ ";
             }
             else
             {
