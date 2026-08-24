@@ -20,7 +20,6 @@ public:
 
     [[nodiscard]] bool has_mine() const noexcept { return _has_mine; }
     [[nodiscard]] std::uint8_t adjacent_mines() const noexcept { return _adjacent_mines; }
-    [[nodiscard]] CellState state() const noexcept { return _state; }
     [[nodiscard]] bool is_revealed() const noexcept { return _state == CellState::revealed; }
     [[nodiscard]] bool is_flagged() const noexcept { return _state == CellState::flagged; }
 
