@@ -61,8 +61,12 @@ void Game::execute(const RevealNeighborsAction& action)
 
     for (const auto &pos : neighbors)
     {
+        if (_board.cell_at(pos).is_flagged())
+            continue;
+
         _board.reveal(pos);
-        if (_board.cell_at(action.position).has_mine())
+
+        if (_board.cell_at(pos).has_mine())
         {
             _state = GameState::lost;
             return;
