@@ -12,12 +12,12 @@ int main()
         game.board().print_board();
 
         std::cout << "\n";
-        std::cout << "1 - Reveal\n";
-        std::cout << "2 - Toggle flag\n";
-        std::cout << "3 - Reveal neighbors\n";
+        std::cout << "1/r - Reveal\n";
+        std::cout << "2/f - Toggle flag\n";
+        std::cout << "3/n - Reveal neighbors\n";
         std::cout << "Choose action: ";
 
-        int action_type;
+        char action_type;
         std::cin >> action_type;
 
         if (!std::cin)
@@ -26,7 +26,7 @@ int main()
         int row;
         int column;
 
-        std::cout << "Enter position (row column): ";
+        std::cout << "Enter position (row column - counting from 1 1): ";
         std::cin >> row >> column;
 
         if (!std::cin)
@@ -37,15 +37,21 @@ int main()
         switch (action_type)
         {
             case 1:
-                action = minesweeper::RevealAction{{row, column}};
+            case 'r':
+            case 'R':
+                action = minesweeper::RevealAction{{row - 1, column - 1}};
                 break;
 
             case 2:
-                action = minesweeper::ToggleFlagAction{{row, column}};
+            case 'f':
+            case 'F':
+                action = minesweeper::ToggleFlagAction{{row - 1, column - 1}};
                 break;
 
             case 3:
-                action = minesweeper::RevealNeighborsAction{{row, column}};
+            case 'n':
+            case 'N':
+                action = minesweeper::RevealNeighborsAction{{row - 1, column - 1}};
                 break;
 
             default:
