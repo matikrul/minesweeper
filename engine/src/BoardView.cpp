@@ -34,6 +34,7 @@ BoardView::BoardView(const Board& board)
             {
                 view.state = CellViewState::revealed;
                 view.adjacent_mines = cell.adjacent_mines();
+                view.has_mine = cell.has_mine();
             }
             else
             {

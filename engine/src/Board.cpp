@@ -180,38 +180,4 @@ void Board::toggle_flag(Position position)
     cell.set_flag(!cell.is_flagged());
 }
 
-void Board::print_board() const
-{
-    for (int row = 0; row < _height; ++row)
-    {
-        for (int column = 0; column < _width; ++column)
-        {
-            const auto& cell = cell_at({row, column});
-
-            if (cell.is_flagged())
-            {
-                std::cout << "F ";
-            }
-            else if (!cell.is_revealed())
-            {
-                std::cout << ". ";
-            }
-            else if (cell.has_mine())
-            {
-                std::cout << "* ";
-            }
-            else if (cell.adjacent_mines() == 0)
-            {
-                std::cout << "_ ";
-            }
-            else
-            {
-                std::cout << static_cast<int>(cell.adjacent_mines()) << ' ';
-            }
-        }
-
-        std::cout << "\n";
-    }
-}
-
 } // namespace minesweeper

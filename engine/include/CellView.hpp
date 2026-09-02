@@ -13,8 +13,9 @@ enum class CellViewState
 
 struct CellView
 {
-    CellViewState state;
-    std::uint8_t adjacent_mines;
+    CellViewState state{CellViewState::hidden};
+    std::uint8_t adjacent_mines{0};
+    bool has_mine{false};
 };
 
 } // namespace minesweeper
