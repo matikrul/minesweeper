@@ -1,5 +1,6 @@
 add_library(minesweeper_engine
     src/Board.cpp
+    src/BoardView.cpp
     src/Cell.cpp
     src/Game.cpp
 )

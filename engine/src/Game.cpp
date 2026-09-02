@@ -91,4 +91,9 @@ const Board& Game::board() const noexcept
     return _board;
 }
 
+BoardView Game::board_view() const
+{
+    return BoardView(_board);
+}
+
 } // namespace minesweeper

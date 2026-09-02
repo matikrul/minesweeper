@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Board.hpp>
+#include <BoardView.hpp>
 #include <Action.hpp>
 
 namespace minesweeper {
@@ -18,6 +19,8 @@ public:
     Game(int width, int height, int mine_count);
 
     GameState make_action(const Action& action);
+
+    BoardView board_view() const;
 
     const Board& board() const noexcept;
 

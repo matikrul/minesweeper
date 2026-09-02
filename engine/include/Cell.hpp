@@ -12,7 +12,6 @@ public:
         flagged,
     };
 
-
     void set_flag(bool enable) noexcept;
     void set_revealed() noexcept;
     void set_mine() noexcept { _has_mine = true; }
