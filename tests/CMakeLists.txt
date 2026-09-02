@@ -13,6 +13,7 @@ enable_testing()
 add_executable(
     minesweeper_tests
     BoardTests.cpp
+    CellTests.cpp
 )
 
 target_link_libraries(
