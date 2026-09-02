@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <Game.hpp>
+#include <BoardPrinter.hpp>
 
 int main()
 {
@@ -9,7 +10,7 @@ int main()
     while (true)
     {
         std::cout << "\n";
-        game.board().print_board();
+        minesweeper::BoardPrinter::print(game.board_view());
 
         std::cout << "\n";
         std::cout << "1/r - Reveal\n";
@@ -63,16 +64,30 @@ int main()
         {
             const auto state = game.make_action(action);
 
+            std::cout << "\nGame state is: ";
+            switch (state)
+            {
+                case minesweeper::GameState::won:
+                    std::cout << "won\n";
+                    break;
+                case minesweeper::GameState::lost:
+                    std::cout << "lost\n";
+                    break;
+                case minesweeper::GameState::in_progress:
+                    std::cout << "in progress\n";
+                    break;
+            }
+
             if (state == minesweeper::GameState::won)
             {
-                game.board().print_board();
+                minesweeper::BoardPrinter::print(game.board_view());
                 std::cout << "\nYou won!\n";
                 break;
             }
 
             if (state == minesweeper::GameState::lost)
             {
-                game.board().print_board();
+                minesweeper::BoardPrinter::print(game.board_view());
                 std::cout << "\nYou lost!\n";
                 break;
             }

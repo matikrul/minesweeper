@@ -23,7 +23,6 @@ public:
     void place_mines(Position safe_position);
     void reveal(Position position);
     void toggle_flag(Position position);
-    void print_board() const;
 
 private:
     int _width{};
