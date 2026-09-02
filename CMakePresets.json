@@ -1,12 +1,12 @@
 {
     "version": 6,
+
     "configurePresets": [
         {
             "name": "default",
             "displayName": "Default",
             "binaryDir": "${sourceDir}/build/default",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "OFF"
             }
         },
@@ -15,9 +15,30 @@
             "displayName": "Tests",
             "binaryDir": "${sourceDir}/build/tests",
             "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug",
                 "BUILD_TESTING": "ON"
             }
+        }
+    ],
+
+    "buildPresets": [
+        {
+            "name": "default",
+            "displayName": "Build Default",
+            "configurePreset": "default",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests",
+            "displayName": "Build Tests",
+            "configurePreset": "tests",
+            "configuration": "Debug"
+        },
+        {
+            "name": "tests-clean",
+            "displayName": "Build Tests (Clean)",
+            "configurePreset": "tests",
+            "configuration": "Debug",
+            "cleanFirst": true
         }
     ]
 }

@@ -3,6 +3,9 @@
 /cmake-build-*/
 /out/
 
+/coverage/
+LastCoverageResults.log
+
 # CMake-generated files
 CMakeCache.txt
 CMakeFiles/
