@@ -42,6 +42,32 @@ Board::Board(int width, int height, int mine_count)
     _cells.resize(cell_count);
 }
 
+Board Board::from_mines(
+    int width,
+    int height,
+    const std::vector<Position>& mines)
+{
+    Board board(width, height, static_cast<int>(mines.size()));
+
+    for (const auto position : mines)
+    {
+        if (!board.is_valid_position(position))
+            throw std::out_of_range("Mine position is outside the board.");
+
+        auto& cell = board.cell_at(position);
+
+        if (cell.has_mine())
+            throw std::invalid_argument("Duplicate mine position.");
+
+        cell.set_mine();
+    }
+
+    board.calculate_adjacent_mines();
+    board._mines_placed = true;
+
+    return board;
+}
+
 bool Board::is_valid_position(Position position) const noexcept
 {
     return position.row >= 0 && position.row < _height &&
@@ -123,15 +149,7 @@ void Board::place_mines(Position safe_position)
         ++mines_placed;
     }
 
-    for (int row = 0; row < _height; ++row)
-    {
-        for (int column = 0; column < _width; ++column)
-        {
-            const Position position{row, column};
-            cell_at(position).set_adjacent_mines(count_adjacent_mines(*this, position));
-        }
-    }
-
+    calculate_adjacent_mines();
     _mines_placed = true;
 }
 
@@ -180,4 +198,17 @@ void Board::toggle_flag(Position position)
     cell.set_flag(!cell.is_flagged());
 }
 
+void Board::calculate_adjacent_mines()
+{
+    for (int row = 0; row < _height; ++row)
+    {
+        for (int column = 0; column < _width; ++column)
+        {
+            const Position position{row, column};
+
+            cell_at(position).set_adjacent_mines(
+                count_adjacent_mines(*this, position));
+        }
+    }
+}
 } // namespace minesweeper

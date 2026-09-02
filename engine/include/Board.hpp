@@ -11,6 +11,9 @@ namespace minesweeper {
 class Board {
 public:
     Board(int width, int height, int mine_count);
+
+    static Board from_mines(int width, int height, const std::vector<Position>& mines);
+
     [[nodiscard]] int width() const noexcept { return _width; }
     [[nodiscard]] int height() const noexcept { return _height; }
     [[nodiscard]] int mine_count() const noexcept { return _mine_count; }
@@ -30,6 +33,8 @@ private:
     int _mine_count{};
     bool _mines_placed{false};
     std::vector<Cell> _cells{};
+
+    void calculate_adjacent_mines();
 };
 
 } // namespace minesweeper
