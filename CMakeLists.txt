@@ -9,7 +9,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 add_subdirectory(engine)
 add_subdirectory(app)
 
-set(BUILD_TESTING OFF)
 include(CTest)
 
 if(BUILD_TESTING)
