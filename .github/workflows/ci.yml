@@ -64,8 +64,8 @@ jobs:
       - name: Install build and coverage tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends g++ ninja-build python3-pip gcovr
-          python3 -m pip install --break-system-packages "cmake>=3.28"
+          sudo apt-get install -y --no-install-recommends g++ ninja-build python3-pip
+          python3 -m pip install --break-system-packages "cmake>=3.28" "gcovr>=8"
 
       - name: Configure coverage build
         run: >
@@ -82,20 +82,21 @@ jobs:
         run: ctest --test-dir build/ci-coverage --output-on-failure --build-config Debug
 
       - name: Generate gcov coverage report
-        run: >
-          gcovr --root .
-          --filter engine
-          --print-summary
-          --html-details coverage.html
-          --xml-pretty
-          --xml coverage.xml
-          build/ci-coverage
+        run: |
+          mkdir -p coverage
+          gcovr --root . \
+            --filter engine \
+            --print-summary \
+            --txt-metric branch \
+            --html-details coverage/index.html \
+            --html-title "Minesweeper coverage" \
+            --xml-pretty \
+            --xml coverage/coverage.xml \
+            build/ci-coverage
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: |
-            coverage.html
-            coverage.*.html
-            coverage.xml
+            coverage/
