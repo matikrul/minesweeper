@@ -65,6 +65,22 @@ TEST(GameActions, ToggleFlagFlagsAndUnflagsCell)
     EXPECT_FALSE(game.board().cell_at({1, 1}).is_flagged());
 }
 
+TEST(GameActions, RevealMineLosesGame)
+{
+    auto game = Game::from_mines(
+        3,
+        3,
+        {
+            {1, 1}
+        });
+
+    const auto state = game.make_action(RevealAction{{1, 1}});
+
+    EXPECT_EQ(state, GameState::lost);
+    EXPECT_TRUE(game.board().cell_at({1, 1}).is_revealed());
+    EXPECT_TRUE(game.board().cell_at({1, 1}).has_mine());
+}
+
 TEST(GameActions, RevealNeighborsDoesNothingWhenCellIsHidden)
 {
     Game game(3, 3, 0);
@@ -74,6 +90,27 @@ TEST(GameActions, RevealNeighborsDoesNothingWhenCellIsHidden)
     expect_hidden(game, {0, 0});
     expect_hidden(game, {1, 1});
     expect_hidden(game, {2, 2});
+}
+
+TEST(GameActions, RevealNeighborsLosesGameWhenFlagsMatchWrongMine)
+{
+    auto game = Game::from_mines(
+        3,
+        3,
+        {
+            {0, 0}
+        });
+
+    game.make_action(RevealAction{{1, 1}});
+    game.make_action(ToggleFlagAction{{0, 1}});
+
+    const auto state = game.make_action(RevealNeighborsAction{{1, 1}});
+
+    EXPECT_EQ(state, GameState::lost);
+    EXPECT_TRUE(game.board().cell_at({0, 0}).is_revealed());
+    EXPECT_TRUE(game.board().cell_at({0, 0}).has_mine());
+    EXPECT_TRUE(game.board().cell_at({0, 1}).is_flagged());
+    expect_hidden(game, {0, 1});
 }
 
 TEST(GameActions, RevealNeighborsRevealsAdjacentCellsWhenFlagCountMatches)

@@ -18,6 +18,8 @@ class Game
 public:
     Game(int width, int height, int mine_count);
 
+    static Game from_mines(int width, int height, const std::vector<Position>& mines);
+
     GameState make_action(const Action& action);
 
     BoardView board_view() const;
@@ -25,6 +27,8 @@ public:
     const Board& board() const noexcept;
 
 private:
+    explicit Game(Board board);
+
     void execute(const RevealAction& action);
     void execute(const ToggleFlagAction& action);
     void execute(const RevealNeighborsAction& action);

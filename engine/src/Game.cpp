@@ -9,6 +9,16 @@ Game::Game(int width, int height, int mine_count)
 {
 }
 
+Game Game::from_mines(int width, int height, const std::vector<Position>& mines)
+{
+    return Game(Board::from_mines(width, height, mines));
+}
+
+Game::Game(Board board)
+    : _board(std::move(board))
+{
+}
+
 GameState Game::make_action(const Action& action)
 {
     std::visit(
