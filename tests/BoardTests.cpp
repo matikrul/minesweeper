@@ -63,7 +63,7 @@ TEST(BoardAccess, CellAtRejectsNegativeRow)
     Board board(3, 3, 1);
 
     EXPECT_THROW(
-        board.cell_at({-1, 0}),
+        static_cast<void>(board.cell_at({-1, 0})),
         std::out_of_range);
 }
 
@@ -72,7 +72,7 @@ TEST(BoardAccess, CellAtRejectsRowOutsideBoard)
     Board board(3, 3, 1);
 
     EXPECT_THROW(
-        board.cell_at({3, 0}),
+        static_cast<void>(board.cell_at({3, 0})),
         std::out_of_range);
 }
 
@@ -81,7 +81,7 @@ TEST(BoardAccess, CellAtRejectsColumnOutsideBoard)
     Board board(3, 3, 1);
 
     EXPECT_THROW(
-        board.cell_at({0, 3}),
+        static_cast<void>(board.cell_at({0, 3})),
         std::out_of_range);
 }
 
@@ -117,7 +117,7 @@ TEST(BoardNeighbors, GetNeighborsRejectsInvalidPosition)
     Board board(3, 3, 1);
 
     EXPECT_THROW(
-        board.get_neighbors({-1, 0}),
+        static_cast<void>(board.get_neighbors({-1, 0})),
         std::out_of_range);
 }
 
