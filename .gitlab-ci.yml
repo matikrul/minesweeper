@@ -1,0 +1,49 @@
+image: gcc:14
+
+stages:
+  - build
+  - unit_tests
+  - coverage
+
+variables:
+  BUILD_DIR: build/ci
+  TEST_BUILD_DIR: build/ci-tests
+  COVERAGE_BUILD_DIR: build/ci-coverage
+  CMAKE_GENERATOR: Ninja
+
+before_script:
+  - apt-get update
+  - apt-get install -y --no-install-recommends ninja-build python3-pip
+  - python3 -m pip install --break-system-packages "cmake>=3.28" gcovr
+
+build:
+  stage: build
+  script:
+    - cmake -S . -B "$BUILD_DIR" -G "$CMAKE_GENERATOR" -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=OFF
+    - cmake --build "$BUILD_DIR" --config Debug
+
+unit_tests:
+  stage: unit_tests
+  script:
+    - cmake -S . -B "$TEST_BUILD_DIR" -G "$CMAKE_GENERATOR" -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+    - cmake --build "$TEST_BUILD_DIR" --config Debug
+    - ctest --test-dir "$TEST_BUILD_DIR" --output-on-failure --build-config Debug
+
+coverage:
+  stage: coverage
+  script:
+    - cmake -S . -B "$COVERAGE_BUILD_DIR" -G "$CMAKE_GENERATOR" -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON -DCMAKE_CXX_FLAGS="--coverage -O0 -g" -DCMAKE_EXE_LINKER_FLAGS="--coverage"
+    - cmake --build "$COVERAGE_BUILD_DIR" --config Debug
+    - ctest --test-dir "$COVERAGE_BUILD_DIR" --output-on-failure --build-config Debug
+    - gcovr --root . --filter engine --print-summary --html-details coverage.html --xml-pretty --xml coverage.xml "$COVERAGE_BUILD_DIR"
+  coverage: '/lines:\s+\d+\.\d+%/'
+  artifacts:
+    when: always
+    paths:
+      - coverage.html
+      - coverage.*.html
+      - coverage.xml
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
