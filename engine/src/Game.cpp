@@ -12,9 +12,9 @@ Game::Game(int width, int height, int mine_count)
 GameState Game::make_action(const Action& action)
 {
     std::visit(
-        [this](const auto& action)
+        [this](const auto& selected_action)
         {
-            execute(action);
+            execute(selected_action);
         },
         action);
 
