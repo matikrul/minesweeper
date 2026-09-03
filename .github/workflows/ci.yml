@@ -42,44 +42,21 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y --no-install-recommends g++ ninja-build python3-pip
-          python3 -m pip install --break-system-packages "cmake>=3.28"
+          python3 -m pip install --break-system-packages "cmake>=3.28" "gcovr>=8"
 
       - name: Configure tests
-        run: cmake -S . -B build/ci-tests -G Ninja -DCMAKE_BUILD_TYPE=Debug -DBUILD_TESTING=ON
+        run: >
+          cmake -S . -B build/ci-tests -G Ninja
+          -DCMAKE_BUILD_TYPE=Debug
+          -DBUILD_TESTING=ON
+          -DCMAKE_CXX_FLAGS="--coverage -O0 -g"
+          -DCMAKE_EXE_LINKER_FLAGS="--coverage"
 
       - name: Build tests
         run: cmake --build build/ci-tests --config Debug
 
       - name: Run unit tests
         run: ctest --test-dir build/ci-tests --output-on-failure --build-config Debug
-
-  coverage:
-    name: Coverage
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Install build and coverage tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends g++ ninja-build python3-pip
-          python3 -m pip install --break-system-packages "cmake>=3.28" "gcovr>=8"
-
-      - name: Configure coverage build
-        run: >
-          cmake -S . -B build/ci-coverage -G Ninja
-          -DCMAKE_BUILD_TYPE=Debug
-          -DBUILD_TESTING=ON
-          -DCMAKE_CXX_FLAGS="--coverage -O0 -g"
-          -DCMAKE_EXE_LINKER_FLAGS="--coverage"
-
-      - name: Build coverage target
-        run: cmake --build build/ci-coverage --config Debug
-
-      - name: Run unit tests
-        run: ctest --test-dir build/ci-coverage --output-on-failure --build-config Debug
 
       - name: Generate gcov coverage report
         run: |
@@ -92,7 +69,7 @@ jobs:
             --html-title "Minesweeper coverage" \
             --xml-pretty \
             --xml coverage/coverage.xml \
-            build/ci-coverage
+            build/ci-tests
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
