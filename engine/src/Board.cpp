@@ -22,6 +22,12 @@ std::uint8_t count_adjacent_mines(const Board& board, Position position)
     return static_cast<std::uint8_t>(mine_count);
 }
 
+std::size_t cell_index(int width, Position position) noexcept
+{
+    return static_cast<std::size_t>(position.row) * static_cast<std::size_t>(width) +
+           static_cast<std::size_t>(position.column);
+}
+
 } // namespace
 
 Board::Board(int width, int height, int mine_count)
@@ -79,7 +85,7 @@ const Cell& Board::cell_at(Position position) const
     if (!is_valid_position(position))
         throw std::out_of_range("Requesting cell at non existing position.");
 
-    return _cells[position.row * _width + position.column];
+    return _cells[cell_index(_width, position)];
 }
 
 Cell& Board::cell_at(Position position)
@@ -87,7 +93,7 @@ Cell& Board::cell_at(Position position)
     if (!is_valid_position(position))
         throw std::out_of_range("Requesting cell at non existing position.");
 
-    return _cells[position.row * _width + position.column];
+    return _cells[cell_index(_width, position)];
 }
 
 std::vector<Position> Board::get_neighbors(Position position) const
@@ -134,9 +140,10 @@ void Board::place_mines(Position safe_position)
     while (mines_placed < static_cast<std::size_t>(_mine_count))
     {
         const auto index = distribution(generator);
+        const auto width = static_cast<std::size_t>(_width);
         const Position position{
-            static_cast<int>(index / _width),
-            static_cast<int>(index % _width)
+            static_cast<int>(index / width),
+            static_cast<int>(index % width)
         };
 
         if (position == safe_position)
