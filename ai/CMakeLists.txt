@@ -1,4 +1,5 @@
 add_library(minesweeper_ai
+    src/ActionDecoder.cpp
     src/BoardEncoder.cpp
 )
 
