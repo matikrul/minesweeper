@@ -12,6 +12,8 @@ enable_testing()
 
 add_executable(
     minesweeper_tests
+
+    BoardEncoderTests.cpp
     BoardTests.cpp
     BoardPrinterTests.cpp
     BoardViewTests.cpp
@@ -22,8 +24,9 @@ add_executable(
 target_link_libraries(
     minesweeper_tests
     PRIVATE
-    minesweeper_engine
-    GTest::gtest_main
+        minesweeper_engine
+        minesweeper_ai
+        GTest::gtest_main
 )
 
 include(GoogleTest)
