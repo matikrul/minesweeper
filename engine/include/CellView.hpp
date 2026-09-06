@@ -7,8 +7,8 @@ namespace minesweeper {
 enum class CellViewState
 {
     hidden,
-    revealed,
-    flagged
+    flagged,
+    revealed
 };
 
 struct CellView
