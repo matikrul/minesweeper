@@ -1,6 +1,6 @@
 add_library(minesweeper_ai
-    src/ActionDecoder.cpp
-    src/BoardEncoder.cpp
+    src/decision/ActionDecoder.cpp
+    src/encoding/BoardEncoder.cpp
 )
 
 target_include_directories(minesweeper_ai

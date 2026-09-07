@@ -1,4 +1,4 @@
-#include <ActionDecoder.hpp>
+#include <ai/decision/ActionDecoder.hpp>
 
 namespace minesweeper {
 

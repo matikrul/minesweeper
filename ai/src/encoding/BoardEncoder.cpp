@@ -1,7 +1,7 @@
 #include <vector>
 #include <stdexcept>
 
-#include <BoardEncoder.hpp>
+#include <ai/encoding/BoardEncoder.hpp>
 
 namespace minesweeper {
 
