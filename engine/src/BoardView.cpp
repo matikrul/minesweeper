@@ -3,6 +3,7 @@
 #include <stdexcept>
 
 #include <Board.hpp>
+#include <NeighborPositions.hpp>
 #include <engine/BoardView.hpp>
 
 namespace minesweeper {
@@ -74,7 +75,7 @@ const CellView& BoardView::cell_at(Position position) const
 
 std::vector<Position> BoardView::get_neighbors(Position position) const
 {
-    return 
+    return neighbor_positions(_width, _height, position);
 }
 
 } // namespace minesweeper

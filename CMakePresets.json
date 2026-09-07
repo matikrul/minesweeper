@@ -40,5 +40,17 @@
             "configuration": "Debug",
             "cleanFirst": true
         }
+    ],
+
+    "testPresets": [
+        {
+            "name": "tests",
+            "displayName": "Run Tests",
+            "configurePreset": "tests",
+            "configuration": "Debug",
+            "output": {
+                "outputOnFailure": true
+            }
+        }
     ]
 }

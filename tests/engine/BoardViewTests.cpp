@@ -1,15 +1,13 @@
 #include <gtest/gtest.h>
 
-#include <Board.hpp>
-#include <engine/BoardView.hpp>
+#include <engine/Game.hpp>
 
 using namespace minesweeper;
 
-TEST(BoardViewDimensions, MatchesBoardDimensions)
+TEST(BoardViewDimensions, MatchesGameDimensions)
 {
-    const auto board = Board::from_mines(4, 3, {});
-
-    const BoardView view(board);
+    const auto game = Game::from_mines(4, 3, {});
+    const auto view = game.board_view();
 
     EXPECT_EQ(view.width(), 4);
     EXPECT_EQ(view.height(), 3);
@@ -17,15 +15,8 @@ TEST(BoardViewDimensions, MatchesBoardDimensions)
 
 TEST(BoardViewCells, ShowsHiddenCellsAsHidden)
 {
-    const auto board = Board::from_mines(
-        3,
-        3,
-        {
-            {1, 1}
-        });
-
-    const BoardView view(board);
-
+    const auto game = Game::from_mines(3, 3, {{1, 1}});
+    const auto view = game.board_view();
     const auto& cell = view.cell_at({1, 1});
 
     EXPECT_EQ(cell.state, CellViewState::hidden);
@@ -35,16 +26,9 @@ TEST(BoardViewCells, ShowsHiddenCellsAsHidden)
 
 TEST(BoardViewCells, ShowsFlaggedCellsAsFlagged)
 {
-    auto board = Board::from_mines(
-        3,
-        3,
-        {
-            {1, 1}
-        });
-
-    board.toggle_flag({1, 1});
-
-    const BoardView view(board);
+    auto game = Game::from_mines(3, 3, {{1, 1}});
+    game.make_action(ToggleFlagAction{{1, 1}});
+    const auto view = game.board_view();
     const auto& cell = view.cell_at({1, 1});
 
     EXPECT_EQ(cell.state, CellViewState::flagged);
@@ -54,16 +38,9 @@ TEST(BoardViewCells, ShowsFlaggedCellsAsFlagged)
 
 TEST(BoardViewCells, ShowsRevealedNumber)
 {
-    auto board = Board::from_mines(
-        3,
-        3,
-        {
-            {1, 1}
-        });
-
-    board.reveal({0, 0});
-
-    const BoardView view(board);
+    auto game = Game::from_mines(3, 3, {{1, 1}});
+    game.make_action(RevealAction{{0, 0}});
+    const auto view = game.board_view();
     const auto& cell = view.cell_at({0, 0});
 
     EXPECT_EQ(cell.state, CellViewState::revealed);
@@ -73,16 +50,9 @@ TEST(BoardViewCells, ShowsRevealedNumber)
 
 TEST(BoardViewCells, ShowsRevealedMine)
 {
-    auto board = Board::from_mines(
-        3,
-        3,
-        {
-            {1, 1}
-        });
-
-    board.reveal({1, 1});
-
-    const BoardView view(board);
+    auto game = Game::from_mines(3, 3, {{1, 1}});
+    game.make_action(RevealAction{{1, 1}});
+    const auto view = game.board_view();
     const auto& cell = view.cell_at({1, 1});
 
     EXPECT_EQ(cell.state, CellViewState::revealed);
@@ -91,20 +61,34 @@ TEST(BoardViewCells, ShowsRevealedMine)
 
 TEST(BoardViewAccess, RejectsNegativePosition)
 {
-    const auto board = Board::from_mines(3, 3, {});
-    const BoardView view(board);
+    const auto game = Game::from_mines(3, 3, {});
+    const auto view = game.board_view();
 
-    EXPECT_THROW(
-        view.cell_at({-1, 0}),
-        std::out_of_range);
+    EXPECT_THROW(view.cell_at({-1, 0}), std::out_of_range);
 }
 
 TEST(BoardViewAccess, RejectsPositionOutsideBoard)
 {
-    const auto board = Board::from_mines(3, 3, {});
-    const BoardView view(board);
+    const auto game = Game::from_mines(3, 3, {});
+    const auto view = game.board_view();
 
-    EXPECT_THROW(
-        view.cell_at({0, 3}),
-        std::out_of_range);
+    EXPECT_THROW(view.cell_at({0, 3}), std::out_of_range);
+}
+
+TEST(BoardViewNeighbors, ReturnsAdjacentPositions)
+{
+    const auto game = Game::from_mines(3, 3, {});
+    const auto view = game.board_view();
+
+    EXPECT_EQ(view.get_neighbors({0, 0}).size(), 3);
+    EXPECT_EQ(view.get_neighbors({0, 1}).size(), 5);
+    EXPECT_EQ(view.get_neighbors({1, 1}).size(), 8);
+}
+
+TEST(BoardViewNeighbors, RejectsInvalidPosition)
+{
+    const auto game = Game::from_mines(3, 3, {});
+    const auto view = game.board_view();
+
+    EXPECT_THROW(view.get_neighbors({-1, 0}), std::out_of_range);
 }

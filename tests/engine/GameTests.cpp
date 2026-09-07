@@ -11,14 +11,14 @@ void expect_revealed(const Game& game, Position position)
 {
     const auto view = game.board_view();
 
-    EXPECT_EQ(view.cell_at({0, 0}).state, CellViewState::revealed);
+    EXPECT_EQ(view.cell_at(position).state, CellViewState::revealed);
 }
 
 void expect_hidden(const Game& game, Position position)
 {
     const auto view = game.board_view();
 
-    EXPECT_NE(view.cell_at({0, 0}).state, CellViewState::revealed);
+    EXPECT_NE(view.cell_at(position).state, CellViewState::revealed);
 }
 
 void flag_all_neighbors(Game& game, Position position)
@@ -65,10 +65,14 @@ TEST(GameActions, ToggleFlagFlagsAndUnflagsCell)
     Game game(3, 3, 1);
 
     game.make_action(ToggleFlagAction{{1, 1}});
-    EXPECT_TRUE(game.board().cell_at({1, 1}).is_flagged());
+    const auto flagged_view = game.board_view();
+
+    EXPECT_EQ(flagged_view.cell_at({1, 1}).state, CellViewState::flagged);
 
     game.make_action(ToggleFlagAction{{1, 1}});
-    EXPECT_FALSE(game.board().cell_at({1, 1}).is_flagged());
+    const auto unflagged_view = game.board_view();
+
+    EXPECT_NE(unflagged_view.cell_at({1, 1}).state, CellViewState::flagged);
 }
 
 TEST(GameActions, RevealMineLosesGame)
@@ -81,10 +85,11 @@ TEST(GameActions, RevealMineLosesGame)
         });
 
     const auto state = game.make_action(RevealAction{{1, 1}});
+    const auto view = game.board_view();
 
     EXPECT_EQ(state, GameState::lost);
-    EXPECT_TRUE(game.board().cell_at({1, 1}).is_revealed());
-    EXPECT_TRUE(game.board().cell_at({1, 1}).has_mine());
+    EXPECT_EQ(view.cell_at({1, 1}).state, CellViewState::revealed);
+    EXPECT_TRUE(view.cell_at({1, 1}).has_mine);
 }
 
 TEST(GameActions, RevealNeighborsDoesNothingWhenCellIsHidden)
@@ -111,11 +116,12 @@ TEST(GameActions, RevealNeighborsLosesGameWhenFlagsMatchWrongMine)
     game.make_action(ToggleFlagAction{{0, 1}});
 
     const auto state = game.make_action(RevealNeighborsAction{{1, 1}});
+    const auto view = game.board_view();
 
     EXPECT_EQ(state, GameState::lost);
-    EXPECT_TRUE(game.board().cell_at({0, 0}).is_revealed());
-    EXPECT_TRUE(game.board().cell_at({0, 0}).has_mine());
-    EXPECT_TRUE(game.board().cell_at({0, 1}).is_flagged());
+    EXPECT_EQ(view.cell_at({0, 0}).state, CellViewState::revealed);
+    EXPECT_TRUE(view.cell_at({0, 0}).has_mine);
+    EXPECT_EQ(view.cell_at({0, 1}).state, CellViewState::flagged);
     expect_hidden(game, {0, 1});
 }
 
@@ -161,8 +167,9 @@ TEST(GameActions, RevealNeighborsSkipsFlaggedNeighbors)
     flag_all_neighbors(game, {1, 1});
 
     const auto state = game.make_action(RevealNeighborsAction{{1, 1}});
+    const auto view = game.board_view();
 
     EXPECT_EQ(state, GameState::won);
-    EXPECT_TRUE(game.board().cell_at({0, 0}).is_flagged());
+    EXPECT_EQ(view.cell_at({0, 0}).state, CellViewState::flagged);
     expect_hidden(game, {0, 0});
 }

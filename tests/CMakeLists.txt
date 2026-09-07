@@ -12,6 +12,6 @@ enable_testing()
 
 include(GoogleTest)
 
-# add_subdirectory(ai)
-# add_subdirectory(app)
+add_subdirectory(ai)
+add_subdirectory(app)
 add_subdirectory(engine)

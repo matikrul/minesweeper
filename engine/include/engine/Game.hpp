@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <engine/BoardView.hpp>
 #include <engine/Action.hpp>

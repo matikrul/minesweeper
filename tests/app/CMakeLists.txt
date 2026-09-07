@@ -1,1 +1,1 @@
-add_Subdirectory(cli)
+add_subdirectory(cli)

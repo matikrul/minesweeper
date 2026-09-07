@@ -5,6 +5,7 @@
 #include <vector>
 
 #include <Board.hpp>
+#include <NeighborPositions.hpp>
 
 namespace minesweeper {
 namespace {
@@ -98,29 +99,7 @@ Cell& Board::cell_at(Position position)
 
 std::vector<Position> Board::get_neighbors(Position position) const
 {
-    if (!is_valid_position(position))
-        throw std::out_of_range("Requesting neighbors for non existing position.");
-
-    std::vector<Position> neighbors;
-
-    for (int row_offset = -1; row_offset <= 1; ++row_offset)
-    {
-        for (int column_offset = -1; column_offset <= 1; ++column_offset)
-        {
-            if (row_offset == 0 && column_offset == 0)
-                continue;
-
-            const Position neighbor{
-                position.row + row_offset,
-                position.column + column_offset
-            };
-
-            if (is_valid_position(neighbor))
-                neighbors.push_back(neighbor);
-        }
-    }
-
-    return neighbors;
+    return neighbor_positions(_width, _height, position);
 }
 
 void Board::place_mines(Position safe_position)

@@ -1,2 +1,1 @@
-add_Subdirectory(decision)
-add_Subdirectory(encoding)
+add_subdirectory(encoding)
