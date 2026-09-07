@@ -10,25 +10,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(
-    minesweeper_tests
-
-    BoardEncoderTests.cpp
-    BoardTests.cpp
-    BoardPrinterTests.cpp
-    BoardViewTests.cpp
-    CellTests.cpp
-    GameTests.cpp
-)
-
-target_link_libraries(
-    minesweeper_tests
-    PRIVATE
-        minesweeper_engine
-        minesweeper_ai
-        GTest::gtest_main
-)
-
 include(GoogleTest)
 
-gtest_discover_tests(minesweeper_tests)
+# add_subdirectory(ai)
+# add_subdirectory(app)
+add_subdirectory(engine)

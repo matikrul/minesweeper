@@ -72,4 +72,9 @@ const CellView& BoardView::cell_at(Position position) const
     ];
 }
 
+std::vector<Position> BoardView::get_neighbors(Position position) const
+{
+    return 
+}
+
 } // namespace minesweeper

@@ -19,6 +19,7 @@ public:
     int height() const noexcept;
 
     const CellView& cell_at(Position position) const;
+    std::vector<Position> get_neighbors(Position position) const;
 
 private:
     int _width;
