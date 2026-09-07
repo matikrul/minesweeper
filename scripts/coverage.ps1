@@ -1,12 +1,34 @@
 $root = Split-Path -Parent $PSScriptRoot
-$exe = Get-ChildItem "$root\build\tests" -Filter "minesweeper_tests.exe" -Recurse | Select-Object -First 1
-$coverage = "$root\coverage"
+$build = Join-Path $root "build\tests"
+$coverage = Join-Path $root "coverage"
+
+if (-not (Test-Path $build))
+{
+    Write-Error "Test build directory does not exist: $build"
+    exit 1
+}
 
 Remove-Item $coverage -Recurse -Force -ErrorAction SilentlyContinue
+
+Write-Host "[coverage] Running tests..."
 
 OpenCppCoverage `
     "--export_type=html:$coverage" `
     "--sources=$root\engine" `
-    "--" $exe.FullName
+    "--sources=$root\ai" `
+    "--sources=$root\app" `
+    "--cover_children" `
+    "--" `
+    "ctest" `
+    "--test-dir" `
+    $build `
+    "-C" `
+    "Debug" `
+    "--output-on-failure"
 
-Start-Process "$coverage\index.html"
+if ($LASTEXITCODE -ne 0)
+{
+    exit $LASTEXITCODE
+}
+
+Start-Process (Join-Path $coverage "index.html")
