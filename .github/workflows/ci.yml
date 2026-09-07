@@ -62,8 +62,7 @@ jobs:
         run: |
           mkdir -p coverage
           gcovr --root . \
-            --filter '.*' \
-            --exclude '^(build|tests)/' \
+            --filter '^(engine|ai|app)/'
             --print-summary \
             --txt-metric branch \
             --html-details coverage/index.html \
