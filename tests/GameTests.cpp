@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include <Action.hpp>
-#include <Game.hpp>
+#include <engine/Action.hpp>
+#include <engine/Game.hpp>
 
 using namespace minesweeper;
 

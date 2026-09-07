@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BoardView.hpp>
+#include <engine/BoardView.hpp>
 
 namespace minesweeper {
 

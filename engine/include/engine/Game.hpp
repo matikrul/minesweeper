@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Board.hpp>
-#include <BoardView.hpp>
-#include <Action.hpp>
+#include <memory>
+
+#include <engine/BoardView.hpp>
+#include <engine/Action.hpp>
 
 namespace minesweeper {
 
@@ -13,10 +14,14 @@ enum class GameState
     lost
 };
 
+// forward declaration
+class Board;
+
 class Game
 {
 public:
     Game(int width, int height, int mine_count);
+    ~Game();
 
     static Game from_mines(int width, int height, const std::vector<Position>& mines);
 
@@ -24,10 +29,8 @@ public:
 
     BoardView board_view() const;
 
-    const Board& board() const noexcept;
-
 private:
-    explicit Game(Board board);
+    explicit Game(std::unique_ptr<Board> board);
 
     void execute(const RevealAction& action);
     void execute(const ToggleFlagAction& action);
@@ -35,7 +38,7 @@ private:
 
     bool is_won() const;
 
-    Board _board;
+    std::unique_ptr<Board> _board;
     GameState _state{GameState::in_progress};
 };
 

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <Board.hpp>
-#include <BoardView.hpp>
+#include <engine/BoardView.hpp>
 
 using namespace minesweeper;
 

@@ -2,7 +2,7 @@
 
 #include <variant>
 
-#include <Position.hpp>
+#include <engine/Position.hpp>
 
 namespace minesweeper {
 

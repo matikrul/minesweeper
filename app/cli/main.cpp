@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include <Game.hpp>
+#include <engine/Game.hpp>
 #include <BoardPrinter.hpp>
 
 int main()

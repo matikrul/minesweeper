@@ -2,11 +2,12 @@
 
 #include <vector>
 
-#include <CellView.hpp>
-#include <Position.hpp>
+#include <engine/CellView.hpp>
+#include <engine/Position.hpp>
 
 namespace minesweeper {
 
+// forward declaration
 class Board;
 
 class BoardView

@@ -1,10 +1,16 @@
 add_executable(minesweeper_cli
     main.cpp
+    BoardPrinter.cpp
 )
 
 target_link_libraries(minesweeper_cli
     PRIVATE
         minesweeper_engine
+)
+
+target_include_directories(minesweeper_cli
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 target_compile_options(minesweeper_cli

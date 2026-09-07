@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <Board.hpp>
-#include <BoardEncoder.hpp>
+#include <ai/encoder/BoardEncoder.hpp>
 
 using namespace minesweeper;
 

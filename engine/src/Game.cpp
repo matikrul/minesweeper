@@ -1,23 +1,26 @@
 #include <algorithm>
 
-#include <Game.hpp>
+#include <engine/Game.hpp>
+#include <Board.hpp>
 
 namespace minesweeper {
 
 Game::Game(int width, int height, int mine_count)
-    : _board(width, height, mine_count)
+    : _board(std::make_unique<Board>(width, height, mine_count))
 {
 }
 
 Game Game::from_mines(int width, int height, const std::vector<Position>& mines)
 {
-    return Game(Board::from_mines(width, height, mines));
+    return Game(std::make_unique<Board>(Board::from_mines(width, height, mines)));
 }
 
-Game::Game(Board board)
+Game::Game(std::unique_ptr<Board> board)
     : _board(std::move(board))
 {
 }
+
+Game::~Game() = default;
 
 GameState Game::make_action(const Action& action)
 {
@@ -36,9 +39,9 @@ GameState Game::make_action(const Action& action)
 
 void Game::execute(const RevealAction& action)
 {
-    _board.reveal(action.position);
+    _board->reveal(action.position);
 
-    if (_board.cell_at(action.position).has_mine())
+    if (_board->cell_at(action.position).has_mine())
     {
         _state = GameState::lost;
         return;
@@ -47,23 +50,23 @@ void Game::execute(const RevealAction& action)
 
 void Game::execute(const ToggleFlagAction& action)
 {
-    _board.toggle_flag(action.position);
+    _board->toggle_flag(action.position);
 }
 
 void Game::execute(const RevealNeighborsAction& action)
 {
-    const auto& cell = _board.cell_at(action.position);
+    const auto& cell = _board->cell_at(action.position);
 
     if (!cell.is_revealed())
         return;
 
-    auto neighbors = _board.get_neighbors(action.position);
+    auto neighbors = _board->get_neighbors(action.position);
 
     const auto flagged_neighbors = std::count_if(
         neighbors.begin(),
         neighbors.end(),
         [this](Position neighbor) {
-            return _board.cell_at(neighbor).is_flagged();
+            return _board->cell_at(neighbor).is_flagged();
         });
 
     if (flagged_neighbors != cell.adjacent_mines())
@@ -71,12 +74,12 @@ void Game::execute(const RevealNeighborsAction& action)
 
     for (const auto &pos : neighbors)
     {
-        if (_board.cell_at(pos).is_flagged())
+        if (_board->cell_at(pos).is_flagged())
             continue;
 
-        _board.reveal(pos);
+        _board->reveal(pos);
 
-        if (_board.cell_at(pos).has_mine())
+        if (_board->cell_at(pos).has_mine())
         {
             _state = GameState::lost;
             return;
@@ -86,11 +89,11 @@ void Game::execute(const RevealNeighborsAction& action)
 
 bool Game::is_won() const
 {
-    for (int row = 0; row < _board.height(); ++row)
+    for (int row = 0; row < _board->height(); ++row)
     {
-        for (int column = 0; column < _board.width(); ++column)
+        for (int column = 0; column < _board->width(); ++column)
         {
-            const auto& cell = _board.cell_at({row, column});
+            const auto& cell = _board->cell_at({row, column});
 
             if (!cell.has_mine() && !cell.is_revealed())
                 return false;
@@ -100,14 +103,9 @@ bool Game::is_won() const
     return true;
 }
 
-const Board& Game::board() const noexcept
-{
-    return _board;
-}
-
 BoardView Game::board_view() const
 {
-    return BoardView(_board);
+    return BoardView(*_board);
 }
 
 } // namespace minesweeper

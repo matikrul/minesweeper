@@ -3,8 +3,8 @@
 #include <cstddef>
 #include <vector>
 
-#include "Cell.hpp"
-#include "Position.hpp"
+#include <Cell.hpp>
+#include <engine/Position.hpp>
 
 namespace minesweeper {
 

@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include <ai/decision/Action.hpp>
+#include <engine/Action.hpp>
 
 namespace minesweeper {
 
