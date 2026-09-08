@@ -4,6 +4,11 @@
 
 namespace minesweeper {
 
-using ModelOutput = std::vector<float>;
+struct ModelOutput
+{
+    int board_width;
+    int board_height;
+    std::vector<float> scores;
+};
 
 } // namespace minesweeper

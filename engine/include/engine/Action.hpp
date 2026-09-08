@@ -27,4 +27,11 @@ using Action = std::variant<
     RevealNeighborsAction
 >;
 
+enum class ActionCode : int
+{
+    reveal = 0,
+    flag = 1,
+    reveal_neighbors = 2
+};
+
 } // namespace minesweeper

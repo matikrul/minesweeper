@@ -1,5 +1,7 @@
 add_library(minesweeper_ai
     src/decision/ActionDecoder.cpp
+    src/decision/ActionsPerCell.cpp
+    src/decision/MaxScoreStrategy.cpp
     src/encoding/BoardEncoder.cpp
 )
 
