@@ -6,7 +6,7 @@ namespace minesweeper {
 
 ActionsPerCell::ActionsPerCell(std::vector<ActionCode> actions_coding) : _actions_coding(std::move(actions_coding))
 {
-    if (actions_coding.empty())
+    if (_actions_coding.empty())
         throw std::invalid_argument("At least one action code is required");
 }
 
@@ -27,7 +27,7 @@ ActionCandidates ActionsPerCell::interpret(const ModelOutput& output) const
         const auto row = cell_index / output.board_width;
         const auto column = cell_index % output.board_width;
 
-        const Position position{static_cast<int>(column), static_cast<int>(row)};
+        const Position position{static_cast<int>(row), static_cast<int>(column)};
 
         const auto action_code = _actions_coding[action_index];
         switch(action_code)
