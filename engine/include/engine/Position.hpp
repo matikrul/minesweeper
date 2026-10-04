@@ -2,6 +2,9 @@
 
 namespace minesweeper {
 
+/**
+ * @brief Coordinates of a board cell.
+ */
 struct Position {
     int row{};
     int column{};
