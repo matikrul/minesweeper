@@ -1,5 +1,5 @@
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 #include <ai/encoding/BoardEncoder.hpp>
 
@@ -15,32 +15,30 @@ enum class EncodedCell : int
 
 } // namespace
 
-std::vector<float> BoardEncoder::encode(const BoardView& board) const
+BoardInput BoardEncoder::encode(const BoardView& board) const
 {
     const auto cell_count = static_cast<std::size_t>(board.width()) * static_cast<std::size_t>(board.height());
-    std::vector<float> board_encoded(cell_count);
+    BoardInput board_input{board.width(), board.height(), std::vector<float>(cell_count)};
 
     for (int row = 0; row < board.height(); ++row)
     {
         for (int column = 0; column < board.width(); ++column)
         {
-            const auto vector_idx = static_cast<std::size_t>(row) * static_cast<std::size_t>(board.width()) +
-                                    static_cast<std::size_t>(column);
             const auto& cell = board.cell_at({row, column});
 
             switch (cell.state)
             {
                 case CellViewState::hidden:
-                    board_encoded[vector_idx] = static_cast<float>(EncodedCell::hidden);
+                    board_input.set_value({row, column}, static_cast<float>(EncodedCell::hidden));
                     break;
                 case CellViewState::flagged:
-                    board_encoded[vector_idx] = static_cast<float>(EncodedCell::flagged);
+                    board_input.set_value({row, column}, static_cast<float>(EncodedCell::flagged));
                     break;
                 case CellViewState::revealed:
                     if (cell.has_mine)
                         throw std::logic_error("Cannot encode a revealed mine.");
                     else
-                        board_encoded[vector_idx] = static_cast<float>(cell.adjacent_mines);
+                        board_input.set_value({row, column}, static_cast<float>(cell.adjacent_mines));
                     break;
                 default:
                     throw(std::invalid_argument("Unrecognized CellView state."));
@@ -49,7 +47,7 @@ std::vector<float> BoardEncoder::encode(const BoardView& board) const
         }
     }
 
-    return board_encoded;
+    return board_input;
 }
 
 } // namespace minesweeper

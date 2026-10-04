@@ -18,7 +18,7 @@ TEST(ActionDecoder, InterpretsAndSelectsTheBestModelAction)
         std::make_unique<ActionsPerCell>(
             std::vector<ActionCode>{ActionCode::reveal, ActionCode::flag}),
         std::make_unique<MaxScoreStrategy>());
-    const ModelOutput output{2, 1, {0.2F, 0.4F, 0.9F, 0.1F}};
+    const ModelOutput output{2, 1, 2, {0.2F, 0.4F, 0.9F, 0.1F}};
 
     const auto action = decoder.decode(output);
 

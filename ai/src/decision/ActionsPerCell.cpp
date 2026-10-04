@@ -14,35 +14,38 @@ ActionCandidates ActionsPerCell::interpret(const ModelOutput& output) const
 {
     ActionCandidates results;
 
-    if (output.scores.size() != output.board_width * output.board_height * _actions_coding.size())
+    const auto actions_per_cell = static_cast<int>(_actions_coding.size());
+    if (output.actions_per_cell != actions_per_cell ||
+        output.scores.size() != static_cast<std::size_t>(output.board_width) *
+                                  static_cast<std::size_t>(output.board_height) *
+                                  _actions_coding.size())
         throw std::runtime_error("Invalid output size");
 
-    const auto actions_per_cell = _actions_coding.size();
-
-    for (std::size_t i = 0; i < output.scores.size(); ++i)
+    for (int row = 0; row < output.board_height; ++row)
     {
-        const auto cell_index = i / actions_per_cell;
-        const auto action_index = i % actions_per_cell;
-
-        const auto row = cell_index / output.board_width;
-        const auto column = cell_index % output.board_width;
-
-        const Position position{static_cast<int>(row), static_cast<int>(column)};
-
-        const auto action_code = _actions_coding[action_index];
-        switch(action_code)
+        for (int column = 0; column < output.board_width; ++column)
         {
-            case ActionCode::reveal:
-                results.push_back(ActionCandidate{RevealAction(position), output.scores[i]});
-                break;
-            case ActionCode::flag:
-                results.push_back(ActionCandidate{ToggleFlagAction(position), output.scores[i]});
-                break;
-            case ActionCode::reveal_neighbors:
-                results.push_back(ActionCandidate{RevealNeighborsAction(position), output.scores[i]});
-                break;
-            default:
-                throw std::runtime_error("Unsupported action code");
+            const Position position{row, column};
+
+            for (int action_index = 0; action_index < actions_per_cell; ++action_index)
+            {
+                const auto action_code = _actions_coding[static_cast<std::size_t>(action_index)];
+                const auto score = output.score_at(position, action_index);
+                switch(action_code)
+                {
+                    case ActionCode::reveal:
+                        results.push_back(ActionCandidate{RevealAction(position), score});
+                        break;
+                    case ActionCode::flag:
+                        results.push_back(ActionCandidate{ToggleFlagAction(position), score});
+                        break;
+                    case ActionCode::reveal_neighbors:
+                        results.push_back(ActionCandidate{RevealNeighborsAction(position), score});
+                        break;
+                    default:
+                        throw std::runtime_error("Unsupported action code");
+                }
+            }
         }
     }
     return results;

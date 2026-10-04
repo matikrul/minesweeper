@@ -10,8 +10,11 @@ TEST(BoardEncoder, EncodesHiddenCells)
     const auto game = Game::from_mines(2, 2, {{0, 0}});
     const BoardEncoder encoder;
 
-    EXPECT_EQ(encoder.encode(game.board_view()),
-              std::vector<float>({-1.0F, -1.0F, -1.0F, -1.0F}));
+    const auto input = encoder.encode(game.board_view());
+
+    EXPECT_EQ(input.width, 2);
+    EXPECT_EQ(input.height, 2);
+    EXPECT_EQ(input.values, std::vector<float>({-1.0F, -1.0F, -1.0F, -1.0F}));
 }
 
 TEST(BoardEncoder, EncodesFlaggedCells)
@@ -20,8 +23,9 @@ TEST(BoardEncoder, EncodesFlaggedCells)
     game.make_action(ToggleFlagAction{{0, 0}});
     const BoardEncoder encoder;
 
-    EXPECT_EQ(encoder.encode(game.board_view()),
-              std::vector<float>({-2.0F, -1.0F, -1.0F, -1.0F}));
+    const auto input = encoder.encode(game.board_view());
+
+    EXPECT_EQ(input.values, std::vector<float>({-2.0F, -1.0F, -1.0F, -1.0F}));
 }
 
 TEST(BoardEncoder, EncodesRevealedCells)
@@ -30,7 +34,9 @@ TEST(BoardEncoder, EncodesRevealedCells)
     game.make_action(RevealAction{{0, 0}});
     const BoardEncoder encoder;
 
-    EXPECT_EQ(encoder.encode(game.board_view()), std::vector<float>({
+    const auto input = encoder.encode(game.board_view());
+
+    EXPECT_EQ(input.values, std::vector<float>({
         1.0F, -1.0F, -1.0F,
         -1.0F, -1.0F, -1.0F,
         -1.0F, -1.0F, -1.0F
@@ -44,10 +50,14 @@ TEST(BoardEncoder, EncodesCellsInRowMajorOrder)
     game.make_action(RevealAction{{1, 0}});
     const BoardEncoder encoder;
 
-    EXPECT_EQ(encoder.encode(game.board_view()), std::vector<float>({
+    const auto input = encoder.encode(game.board_view());
+
+    EXPECT_EQ(input.values, std::vector<float>({
         1.0F, -1.0F, -1.0F,
         1.0F, -1.0F, -1.0F
     }));
+    EXPECT_FLOAT_EQ(input.value_at({1, 0}), 1.0F);
+    EXPECT_FLOAT_EQ(input.value_at({1, 2}), -1.0F);
 }
 
 TEST(BoardEncoder, EncodesMixedCellStates)
@@ -57,7 +67,9 @@ TEST(BoardEncoder, EncodesMixedCellStates)
     game.make_action(ToggleFlagAction{{0, 1}});
     const BoardEncoder encoder;
 
-    EXPECT_EQ(encoder.encode(game.board_view()), std::vector<float>({
+    const auto input = encoder.encode(game.board_view());
+
+    EXPECT_EQ(input.values, std::vector<float>({
         1.0F, -2.0F, -1.0F,
         -1.0F, -1.0F, -1.0F,
         -1.0F, -1.0F, -1.0F

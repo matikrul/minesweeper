@@ -14,11 +14,10 @@ namespace minesweeper {
  * `width * height` board and `N = actions_coding.size()`, `scores` must
  * contain `width * height * N` values.
  *
- * Scores are grouped in row-major order. For the cell at index
- * `cell = row * width + column`, the score for `action_index` is at
- * `cell * N + action_index`. `actions_coding` defines which move kind each
- * `action_index` represents, so its order can deliberately match the model
- * output.
+ * Scores are grouped in row-major order. `ModelOutput::score_at()` converts
+ * a position and action index into the matching score. `actions_coding`
+ * defines which move kind each action index represents, so its order can
+ * deliberately match the model output.
  */
 class ActionsPerCell : public IActionInterpreter {
 public:
@@ -28,7 +27,10 @@ public:
      */
     ActionsPerCell(std::vector<ActionCode> actions_coding);
 
-    /** @throws std::runtime_error If the number of scores does not fit the format. */
+    /**
+     * @throws std::runtime_error If the output shape does not match this
+     * interpreter's action configuration.
+     */
     ActionCandidates interpret(const ModelOutput& output) const;
 private:
     std::vector<ActionCode> _actions_coding;
