@@ -3,11 +3,11 @@
 #include <utility>
 #include <vector>
 
-#include <ai/decision/ActionInterpreter.hpp>
+#include <ai/decision/IActionInterpreter.hpp>
 
 namespace minesweeper {
 
-class ActionsPerCell : public ActionInterpreter {
+class ActionsPerCell : public IActionInterpreter {
 public:
     ActionsPerCell(std::vector<ActionCode> actions_coding);
 

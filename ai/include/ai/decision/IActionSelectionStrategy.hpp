@@ -5,10 +5,10 @@
 
 namespace minesweeper {
 
-class ActionSelectionStrategy
+class IActionSelectionStrategy
 {
 public:
-    virtual ~ActionSelectionStrategy() = default;
+    virtual ~IActionSelectionStrategy() = default;
 
     virtual Action select(const ActionCandidates& candidates) const = 0;
 };

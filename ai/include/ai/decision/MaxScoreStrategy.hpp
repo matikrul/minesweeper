@@ -1,10 +1,10 @@
 #pragma once
 
-#include <ai/decision/ActionSelectionStrategy.hpp>
+#include <ai/decision/IActionSelectionStrategy.hpp>
 
 namespace minesweeper {
 
-class MaxScoreStrategy : public ActionSelectionStrategy {
+class MaxScoreStrategy : public IActionSelectionStrategy {
 public:
     Action select(const ActionCandidates& candidates) const;
 };

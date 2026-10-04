@@ -5,10 +5,10 @@
 
 namespace minesweeper {
 
-class ActionInterpreter
+class IActionInterpreter
 {
 public:
-    virtual ~ActionInterpreter() = default;
+    virtual ~IActionInterpreter() = default;
 
     virtual ActionCandidates interpret(const ModelOutput& output) const = 0;
 };
